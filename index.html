@@ -12,9 +12,14 @@
     <div id="recv"></div>
     <script type="text/javascript">
         var websocket=new WebSocket("ws://localhost:3000/");
-        function showMessage(str){
+        function showMessage(str,type){
           var div=document.createElement('div');
           div.innerHTML=str;
+          if(type=="enter"){
+            div.style.color="blue";
+          }else if(type=="leave"){
+            div.style.color="red";
+          }
           document.body.appendChild(div);
         }
         websocket.onopen=function(){
@@ -22,7 +27,7 @@
             document.getElementById("sentBtn").onclick=function(){
                 var txt=document.getElementById("sendTxt").value;
                 if(txt){
-                                  websocket.send(txt);
+                      websocket.send(txt);
                 }
             }
         }
@@ -31,7 +36,8 @@
         }
         websocket.onmessage=function(e){
             console.log(e.data);
-            showMessage(e.data);
+            var mes=JSON.parse(e.data);
+            showMessage(mes.data,mes.type);
         }
 
     </script>
